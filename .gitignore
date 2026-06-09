@@ -1,0 +1,8 @@
+**pycache**/
+*.pyc
+venv/
+.env
+
+data/uploads/*
+data/processed/*
+data/exports/*

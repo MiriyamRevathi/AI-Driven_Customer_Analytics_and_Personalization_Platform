@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}AI Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="saas-dashboard">
+    <aside id="dashboard-sidebar" class="saas-sidebar">
+        <div class="sidebar-top">
+            <div class="brand-mark">AI</div>
+            <div>
+                <div class="brand-title">CustomerAI</div>
+                <div class="brand-subtitle">Analytics Platform</div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Dashboard navigation">
+            <button class="sidebar-link active" type="button" data-section="overview-section">
+                <i class="bi bi-grid-1x2"></i><span>Dashboard Overview</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="analytics-section">
+                <i class="bi bi-pie-chart"></i><span>Analytics</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="segmentation-section">
+                <i class="bi bi-diagram-3"></i><span>Customer Segmentation</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="prediction-section">
+                <i class="bi bi-graph-up-arrow"></i><span>Purchase Predictions</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="recommendations-section">
+                <i class="bi bi-stars"></i><span>Recommendations</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="exports-section">
+                <i class="bi bi-cloud-download"></i><span>Export Reports</span>
+            </button>
+            <button class="sidebar-link" type="button" data-section="about-section">
+                <i class="bi bi-info-circle"></i><span>About Project</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{{ url_for('upload.upload_page') }}" class="btn btn-glow w-100">
+                <i class="bi bi-cloud-arrow-up me-1"></i>
+                Upload Dataset
+            </a>
+        </div>
+    </aside>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <main class="saas-main">
+        <header class="topbar glass-card">
+            <button id="sidebar-toggle" class="icon-button d-xl-none" type="button" aria-label="Open menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="topbar-title">
+                <span class="status-dot"></span>
+                <div>
+                    <h1>AI Driven Customer Analytics</h1>
+                    <p>Segmentation, prediction, personalization, and reports from local customer data.</p>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <span class="dataset-badge" id="dataset-indicator">
+                    <i class="bi bi-database-check"></i>
+                    Waiting for dataset
+                </span>
+                <span class="time-chip" id="current-datetime">--</span>
+                <a class="btn btn-outline-light btn-sm" href="{{ url_for('upload.upload_page') }}">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Upload
+                </a>
+            </div>
+        </header>
+
+        <div id="dashboard-loading" class="glass-alert loading-state d-flex align-items-center gap-2" role="status">
+            <div class="spinner-border spinner-border-sm" aria-hidden="true"></div>
+            <span>Loading AI dashboard insights...</span>
+        </div>
+
+        <div id="dashboard-error" class="glass-alert error-state d-none" role="alert"></div>
+        <div id="export-alert" class="glass-alert d-none" role="alert"></div>
+
+        <section id="dashboard-content" class="dashboard-content d-none">
+            <section id="overview-section" class="dashboard-section active">
+                <div class="section-hero glass-card">
+                    <div>
+                        <span class="section-kicker">Dashboard Overview</span>
+                        <h2>Executive intelligence workspace</h2>
+                        <p>Monitor customer value, behavior patterns, ML outputs, and recommended business actions from one polished analytics surface.</p>
+                    </div>
+                    <div class="hero-orbit">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card kpi-purple">
+                        <div class="kpi-icon"><i class="bi bi-people"></i></div>
+                        <span>Total Customers</span>
+                        <strong id="kpi-total-customers">0</strong>
+                    </div>
+                    <div class="kpi-card kpi-blue">
+                        <div class="kpi-icon"><i class="bi bi-cash-stack"></i></div>
+                        <span>Total Spending</span>
+                        <strong id="kpi-total-spending">0</strong>
+                    </div>
+                    <div class="kpi-card kpi-cyan">
+                        <div class="kpi-icon"><i class="bi bi-graph-up"></i></div>
+                        <span>Average Spending</span>
+                        <strong id="kpi-average-spending">0</strong>
+                    </div>
+                    <div class="kpi-card kpi-pink">
+                        <div class="kpi-icon"><i class="bi bi-repeat"></i></div>
+                        <span>Avg. Purchase Frequency</span>
+                        <strong id="kpi-average-frequency">0</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section id="analytics-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">Analytics</span>
+                    <h2>Customer behavior intelligence</h2>
+                </div>
+
+                <div class="analytics-grid">
+                    <article class="glass-card chart-card">
+                        <div class="card-title-row">
+                            <h3>Category Distribution</h3>
+                            <span class="mini-badge">Pie</span>
+                        </div>
+                        <div class="chart-panel">
+                            <canvas id="category-chart" aria-label="Category distribution chart"></canvas>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table dashboard-table align-middle mb-0">
+                                <thead><tr><th>Preferred Category</th><th class="text-end">Customers</th></tr></thead>
+                                <tbody id="category-table-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article class="glass-card chart-card">
+                        <div class="card-title-row">
+                            <h3>Location Distribution</h3>
+                            <span class="mini-badge">Bar</span>
+                        </div>
+                        <div class="chart-panel">
+                            <canvas id="location-chart" aria-label="Location distribution chart"></canvas>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table dashboard-table align-middle mb-0">
+                                <thead><tr><th>Location</th><th class="text-end">Customers</th></tr></thead>
+                                <tbody id="location-table-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article class="glass-card chart-card span-7">
+                        <div class="card-title-row">
+                            <h3>Top Customers by Spending</h3>
+                            <span class="mini-badge">Horizontal Bar</span>
+                        </div>
+                        <div class="chart-panel chart-panel-wide">
+                            <canvas id="top-customers-chart" aria-label="Top customers by spending chart"></canvas>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table dashboard-table align-middle mb-0">
+                                <thead><tr><th>Customer ID</th><th class="text-end">Total Spending</th><th>Preferred Category</th></tr></thead>
+                                <tbody id="top-customers-table-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article class="glass-card chart-card span-5">
+                        <div class="card-title-row">
+                            <h3>Missing Values</h3>
+                            <span class="mini-badge">Quality</span>
+                        </div>
+                        <div class="table-responsive table-scroll">
+                            <table class="table dashboard-table align-middle mb-0">
+                                <thead><tr><th>Column</th><th class="text-end">Missing</th></tr></thead>
+                                <tbody id="missing-values-table-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="segmentation-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">Customer Segmentation</span>
+                    <h2>KMeans value clusters</h2>
+                    <span id="segment-status" class="section-status">Loading segments...</span>
+                </div>
+                <article class="glass-card chart-card">
+                    <div class="chart-panel chart-panel-wide">
+                        <canvas id="segments-chart" aria-label="Customer segments chart"></canvas>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table dashboard-table align-middle mb-0">
+                            <thead><tr><th>Customer ID</th><th>Segment</th><th class="text-end">Total Spending</th><th class="text-end">Purchase Frequency</th><th class="text-end">Age</th></tr></thead>
+                            <tbody id="segments-table-body"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section id="prediction-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">Purchase Predictions</span>
+                    <h2>Next-month purchase likelihood</h2>
+                    <span id="prediction-status" class="section-status">Loading predictions...</span>
+                </div>
+                <article class="glass-card chart-card">
+                    <div class="chart-panel chart-panel-wide">
+                        <canvas id="predictions-chart" aria-label="Purchase prediction results chart"></canvas>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table dashboard-table align-middle mb-0">
+                            <thead><tr><th>Customer ID</th><th>Predicted Purchase</th><th class="text-end">Probability</th></tr></thead>
+                            <tbody id="predictions-table-body"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section id="recommendations-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">Recommendations</span>
+                    <h2>Personalized campaign actions</h2>
+                    <span id="recommendation-status" class="section-status">Loading recommendations...</span>
+                </div>
+                <article class="glass-card chart-card">
+                    <div class="chart-panel chart-panel-wide">
+                        <canvas id="recommendations-chart" aria-label="Recommendation priorities chart"></canvas>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table dashboard-table align-middle mb-0">
+                            <thead><tr><th>Customer ID</th><th>Recommendation</th><th>Recommended Category</th><th>Priority</th></tr></thead>
+                            <tbody id="recommendations-table-body"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section id="exports-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">Export Reports</span>
+                    <h2>Download final analytics outputs</h2>
+                </div>
+                <article class="glass-card export-panel">
+                    <div>
+                        <h3>Generate assignment-ready reports</h3>
+                        <p>Exports include analytics, segmentation, predictions, and recommendations from the latest processed dataset.</p>
+                    </div>
+                    <div class="export-actions">
+                        <button id="export-json-button" class="btn btn-outline-light" type="button">
+                            <i class="bi bi-filetype-json me-1"></i> Export JSON
+                        </button>
+                        <button id="export-excel-button" class="btn btn-glow" type="button">
+                            <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export Excel
+                        </button>
+                    </div>
+                </article>
+            </section>
+
+            <section id="about-section" class="dashboard-section">
+                <div class="section-heading">
+                    <span class="section-kicker">About Project</span>
+                    <h2>Academic AI analytics platform</h2>
+                </div>
+                <article class="glass-card about-panel">
+                    <p>This project demonstrates a local Flask-based AI analytics workflow for customer behavior understanding. It uses JSON and Excel inputs only, no database, lightweight ML, dashboard visualization, and exportable reports.</p>
+                    <div class="about-grid">
+                        <div><i class="bi bi-upload"></i><strong>Upload</strong><span>Excel/JSON validation</span></div>
+                        <div><i class="bi bi-bar-chart"></i><strong>Analyze</strong><span>Business summaries</span></div>
+                        <div><i class="bi bi-diagram-3"></i><strong>Segment</strong><span>KMeans clustering</span></div>
+                        <div><i class="bi bi-magic"></i><strong>Personalize</strong><span>Rule-based actions</span></div>
+                    </div>
+                </article>
+            </section>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+{% endblock %}

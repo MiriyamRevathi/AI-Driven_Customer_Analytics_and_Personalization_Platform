@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data{% endblock %}
+
+{% block content %}
+<section class="upload-page">
+    <div class="upload-ambient upload-ambient-one"></div>
+    <div class="upload-ambient upload-ambient-two"></div>
+
+    <div class="upload-shell">
+        <div class="upload-copy">
+            <div class="app-pill">
+                <i class="bi bi-cpu"></i>
+                Local AI analytics platform
+            </div>
+            <h1>Prepare customer data for intelligent analytics.</h1>
+            <p>
+                Upload a JSON or Excel dataset and the platform will validate, clean, analyze,
+                segment, predict, recommend, visualize, and export insights locally.
+            </p>
+            <div class="upload-feature-list">
+                <span><i class="bi bi-check2-circle"></i> JSON + Excel</span>
+                <span><i class="bi bi-check2-circle"></i> No database</span>
+                <span><i class="bi bi-check2-circle"></i> Local Flask app</span>
+            </div>
+            <a class="btn btn-outline-light upload-dashboard-link" href="{{ url_for('dashboard.dashboard_page') }}">
+                <i class="bi bi-grid-1x2 me-1"></i>
+                Open Dashboard
+            </a>
+        </div>
+
+        <div class="upload-card">
+            <div class="upload-card-header">
+                <div class="upload-icon">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
+                <div>
+                    <h2>Upload Dataset</h2>
+                    <p>Supported files: <span>.xlsx</span> <span>.json</span></p>
+                </div>
+            </div>
+
+            <div id="upload-alert" class="alert d-none" role="alert"></div>
+
+            <form id="upload-form" action="{{ url_for('upload.upload_file') }}" method="post" enctype="multipart/form-data">
+                <label id="drop-zone" class="drop-zone" for="file">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                    <strong>Drop your customer dataset here</strong>
+                    <span>or click to browse from your computer</span>
+                    <input class="visually-hidden" type="file" id="file" name="file" accept=".xlsx,.json" required>
+                </label>
+
+                <div class="selected-file">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span id="selected-file-name">No file selected</span>
+                </div>
+
+                <div class="upload-progress d-none" id="upload-progress">
+                    <div class="progress" role="progressbar" aria-label="Upload progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <button id="upload-button" type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="bi bi-lightning-charge me-1"></i>
+                    Upload and Validate
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script>
+    const dropZone = document.getElementById("drop-zone");
+    const fileInput = document.getElementById("file");
+    const selectedFileName = document.getElementById("selected-file-name");
+    const uploadProgress = document.getElementById("upload-progress");
+    const uploadFormElement = document.getElementById("upload-form");
+
+    function updateSelectedFileName() {
+        selectedFileName.textContent = fileInput.files.length ? fileInput.files[0].name : "No file selected";
+    }
+
+    fileInput.addEventListener("change", updateSelectedFileName);
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            dropZone.classList.add("drag-active");
+        });
+    });
+
+    ["dragleave", "drop"].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            dropZone.classList.remove("drag-active");
+        });
+    });
+
+    dropZone.addEventListener("drop", (event) => {
+        if (event.dataTransfer.files.length) {
+            fileInput.files = event.dataTransfer.files;
+            updateSelectedFileName();
+        }
+    });
+
+    uploadFormElement.addEventListener("submit", () => {
+        uploadProgress.classList.remove("d-none");
+    });
+</script>
+{% endblock %}
