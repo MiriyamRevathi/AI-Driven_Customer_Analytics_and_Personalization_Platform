@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -7,8 +7,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 class Config:
     SECRET_KEY = "change-this-secret-key-for-local-development"
     DEBUG = True
-    HOST = "127.0.0.1"
-    PORT = 5000
+
+    # Render deployment settings
+    HOST = "0.0.0.0"
+    PORT = int(os.environ.get("PORT", 5000))
 
     DATA_DIR = BASE_DIR / "data"
     UPLOAD_FOLDER = DATA_DIR / "uploads"
