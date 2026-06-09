@@ -2,7 +2,7 @@
 
 ## Live Website
 
-🔗 Live Demo: https://nn7z6gt8-5000.inc1.devtunnels.ms/
+🔗 https://ai-driven-customer-analytics-and-cmy8.onrender.com
 
 ---
 
