@@ -1,0 +1,62 @@
+[
+  {
+    "customer_id": "C001",
+    "age": 22,
+    "gender": "Female",
+    "location": "Delhi",
+    "purchase_frequency": 1,
+    "total_spending": 300,
+    "preferred_category": "Books",
+    "last_purchase_date": "2026-01-01"
+  },
+  {
+    "customer_id": "C002",
+    "age": 27,
+    "gender": "Male",
+    "location": "Mumbai",
+    "purchase_frequency": 3,
+    "total_spending": 2500,
+    "preferred_category": "Fashion",
+    "last_purchase_date": "2026-03-11"
+  },
+  {
+    "customer_id": "C003",
+    "age": 35,
+    "gender": "Female",
+    "location": "Bangalore",
+    "purchase_frequency": 7,
+    "total_spending": 15000,
+    "preferred_category": "Electronics",
+    "last_purchase_date": "2026-05-28"
+  },
+  {
+    "customer_id": "C004",
+    "age": 41,
+    "gender": "Male",
+    "location": "Chennai",
+    "purchase_frequency": 6,
+    "total_spending": 12000,
+    "preferred_category": "Home Decor",
+    "last_purchase_date": "2026-05-20"
+  },
+  {
+    "customer_id": "C005",
+    "age": 30,
+    "gender": "Female",
+    "location": "Hyderabad",
+    "purchase_frequency": 2,
+    "total_spending": 900,
+    "preferred_category": "Beauty",
+    "last_purchase_date": "2026-02-18"
+  },
+  {
+    "customer_id": "C006",
+    "age": 48,
+    "gender": "Male",
+    "location": "Pune",
+    "purchase_frequency": 9,
+    "total_spending": 22000,
+    "preferred_category": "Electronics",
+    "last_purchase_date": "2026-05-29"
+  }
+]
